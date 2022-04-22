@@ -2,16 +2,9 @@
   "name": "fuzzbunny",
   "version": "1.0.1",
   "description": "Fast fuzzy string matching with scoring and matched ranges",
-  "main": "fuzzbunny.js",
-  "types": "fuzzbunny.d.ts",
-  "files": [
-    "fuzzbunny.js",
-    "fuzzbunny.ts",
-    "fuzzbunny.d.ts",
-    "fuzzbunny-extra.js",
-    "fuzzbunny-extra.ts",
-    "fuzzbunny-extra.d.ts"
-  ],
+  "main": "build/fuzzbunny.js",
+  "types": "build/fuzzbunny.d.ts",
+  "files": ["build"],
   "scripts": {
     "test": "mocha tests/*.js",
     "lint": "prettier --list-different {./*.{js,md,yml},tests/**.js,docs/*.{ts,css,html,json}}",
