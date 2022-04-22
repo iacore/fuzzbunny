@@ -17,8 +17,14 @@ function highlightsFromRanges(targetStr, ranges) {
  * Filter elements and return with individual score for each field.
  */
 function fuzzyFilter1(items, searchStr, options) {
-    return (0, fuzzbunny_1.fuzzyFilterHelper)(items, searchStr, options, (result, item, field, match) => {
-        const value = item[field];
+    const searchStrLowerCased = (searchStr || ``).trim().toLowerCase();
+    return (0, fuzzbunny_1.fuzzyFilterHelper)(items, searchStr, options, (result, item, field) => {
+        const value = String(item[field]);
+        if (!value)
+            return result;
+        const match = (0, fuzzbunny_1.fuzzyScoreItem)(value, searchStrLowerCased);
+        if (!match)
+            return result;
         result = result || { item, scores: {}, highlights: {} };
         result.scores[field] = match.score;
         result.highlights[field] = highlightsFromRanges(searchStr, match.ranges);

@@ -6,7 +6,11 @@
   "types": "fuzzbunny.d.ts",
   "files": [
     "fuzzbunny.js",
-    "fuzzbunny.d.ts"
+    "fuzzbunny.ts",
+    "fuzzbunny.d.ts",
+    "fuzzbunny-extra.js",
+    "fuzzbunny-extra.ts",
+    "fuzzbunny-extra.d.ts"
   ],
   "scripts": {
     "test": "mocha tests/*.js",

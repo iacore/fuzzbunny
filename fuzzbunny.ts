@@ -314,41 +314,20 @@ function fuzzyMatch(targetStr, searchStr) {
  * @returns {FuzzyFilterResult<Item>[]}
  */
 function fuzzyFilter(items, searchStr, options) {
-  return fuzzyFilterHelper(items, searchStr, options, (result, item, field, match) => {
-    const value = item[field];
+  const searchStrLowerCased = (searchStr || ``).trim().toLowerCase();
+  const fields = options ? options.fields : null;
+
+  let results = fuzzyFilterHelper(items, searchStr, options, (result, item, field) => {
+    const value = String(item[field])
+    if (!value) return result
+    const match = fuzzyScoreItem(value, searchStrLowerCased);
+    if (!match) return result
+
     result = result || {item, score: 0, highlights: {}};
     result.score = Math.max(match.score, result.score);
     result.highlights[field] = highlightsFromRanges(value, match.ranges);
     return result
   })
-}
-
-/**
- * @private
- */
-function fuzzyFilterHelper(items, searchStr, options, mergeResult) {
-  const results = [];
-  const searchStrLowerCased = (searchStr || ``).trim().toLowerCase();
-  const fields = options ? options.fields : null;
-  if (!fields || !Array.isArray(fields) || fields.length == 0) {
-    throw new Error(`invalid fields, did you forget to pass {fields: [...]} as options param?`);
-  }
-
-  for (const item of items) {
-    let result = null;
-    for (const field of fields) {
-      const value = item[field];
-      if (typeof value === `string` && value) {
-        const match = fuzzyScoreItem(value, searchStrLowerCased);
-        if (match) {
-          result = mergeResult(result, item, field, match)
-        }
-      }
-    }
-    if (result) {
-      results.push(result);
-    }
-  }
 
   // sort if searchStr is not empty, otherwise preserve original order, since its a pass through
   if (searchStrLowerCased) {
@@ -364,6 +343,28 @@ function fuzzyFilterHelper(items, searchStr, options, mergeResult) {
       }
       return diff;
     });
+  }
+  return results
+}
+
+/**
+ * @private
+ */
+function fuzzyFilterHelper(items, searchStr, options, mergeResult) {
+  const results = [];
+  const fields = options ? options.fields : null;
+  if (!fields || !Array.isArray(fields) || fields.length == 0) {
+    throw new Error(`invalid fields, did you forget to pass {fields: [...]} as options param?`);
+  }
+
+  for (const item of items) {
+    let result = null;
+    for (const field of fields) {
+      result = mergeResult(result, item, field)
+    }
+    if (result) {
+      results.push(result);
+    }
   }
 
   return results;
