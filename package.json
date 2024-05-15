@@ -10,7 +10,8 @@
     "lint": "prettier --list-different {./*.{js,md,yml},tests/**.js,docs/*.{ts,css,html,json}}",
     "gen-types": "tsc",
     "gen-demo": "NODE_ENV=production webpack --config docs/webpack.config.js",
-    "prepublishOnly": "npm run gen-types && npm run gen-demo"
+    "prepublishOnly": "npm run gen-types && npm run gen-demo",
+    "typecheck": "deno check fuzzbunny.js -c tsconfig-base.json"
   },
   "repository": {
     "type": "git",
