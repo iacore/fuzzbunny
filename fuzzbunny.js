@@ -3,6 +3,7 @@ const SCORE_PREFIX = 200;
 const SCORE_CONTIGUOUS = 300;
 
 /**
+ * -
  * @param {number} idx - index of the match
  * @param {number} len - length of the match
  * @param {boolean} isPrefix - was it a prefix of a word
@@ -315,7 +316,7 @@ function fuzzyMatch(targetStr, searchStr) {
  */
 function fuzzyFilter(items, searchStr, options) {
   const searchStrLowerCased = (searchStr || ``).trim().toLowerCase();
-  const fields = options ? options.fields : null;
+  const fields = options?.fields ?? [];
 
   let results = fuzzyFilterHelper(items, searchStr, options, (result, item, field) => {
     const value = String(item[field])
@@ -348,7 +349,23 @@ function fuzzyFilter(items, searchStr, options) {
 }
 
 /**
+ * @template Item
+ * @template Result
+ * @callback MergeFunc
+ * @param {null|Result} result
+ * @param {Item} item
+ * @param {keyof Item} field
+ * @returns {null|Result}
+ */
+
+/**
  * @private
+ * @template Item
+ * @template Result
+ * @param {Item[]} items
+ * @param {string} searchStr
+ * @param {{fields: (keyof Item)[]}} options
+ * @param {MergeFunc<Item, Result>} mergeResult
  */
 function fuzzyFilterHelper(items, searchStr, options, mergeResult) {
   const results = [];
@@ -370,6 +387,6 @@ function fuzzyFilterHelper(items, searchStr, options, mergeResult) {
   return results;
 }
 
-import { fuzzyFilter1 } from "./fuzzybunny-extra"
+import { fuzzyFilter1 } from "./fuzzbunny-extra.ts"
 
 export {fuzzyFilter, fuzzyFilter1, fuzzyMatch, fuzzyScoreItem, highlightsFromRanges, fuzzyFilterHelper};

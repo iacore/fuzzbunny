@@ -1,4 +1,4 @@
-import {fuzzyFilterHelper, fuzzyScoreItem} from "./fuzzbunny"
+import {fuzzyFilterHelper, fuzzyScoreItem} from "./fuzzbunny.js"
 
 export type FuzzyFilterResult1<Item> = {
     item: Item;
@@ -11,7 +11,7 @@ export type TextRange = {
     end: number,
 }
 
-function highlightsFromRanges(targetStr: string, ranges): TextRange[] {
+function highlightsFromRanges(targetStr: string, ranges: number[]): TextRange[] {
     const highlights = [];
     let lastIndex = 0;
     let rangesIdx = 0;
@@ -33,7 +33,7 @@ function highlightsFromRanges(targetStr: string, ranges): TextRange[] {
 }): FuzzyFilterResult1<Item>[] {
   const searchStrLowerCased = (searchStr || ``).trim().toLowerCase();
   
-  return fuzzyFilterHelper(items, searchStr, options, (result: null | FuzzyFilterResult1<Item>, item, field) => {
+  return fuzzyFilterHelper(items, searchStr, options, (result: null | FuzzyFilterResult1<Item>, item: Item, field: keyof Item): null | FuzzyFilterResult1<Item> => {
     const value = String(item[field])
     if (!value) return result
     const match = fuzzyScoreItem(value, searchStrLowerCased);
